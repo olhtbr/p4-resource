@@ -1,1 +1,1 @@
-FROM concourse/busybox
+FROM busybox
