@@ -1,0 +1,12 @@
+#!/bin/bash
+
+bundle install
+export GOPATH=`pwd`
+GOOS=linux GOARCH=amd64 go build -o bin/in in/main.go
+GOOS=linux GOARCH=amd64 go build -o bin/out out/main.go
+GOOS=linux GOARCH=amd64 go build -o bin/check check/main.go
+
+chmod +x bin/*
+
+docker build -t olhtbr/p4-resource .
+bundle exec rake spec

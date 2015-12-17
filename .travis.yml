@@ -4,9 +4,5 @@ language: ruby
 services:
   - docker
 
-install:
-  - bundle install
-  - docker build -t olhtbr/p4-resource .
-
 script:
-  - bundle exec rake spec
+  - ./build
