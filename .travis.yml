@@ -4,5 +4,8 @@ language: ruby
 services:
   - docker
 
+install:
+  - chmod +x build
+
 script:
-  - ./build
+  - build
