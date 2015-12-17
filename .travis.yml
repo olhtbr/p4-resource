@@ -8,4 +8,4 @@ install:
   - chmod +x build
 
 script:
-  - build
+  - ./build
