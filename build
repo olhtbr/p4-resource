@@ -8,5 +8,5 @@ GOOS=linux GOARCH=amd64 go build -o bin/check check/main.go
 
 chmod +x bin/*
 
-docker build -t olhtbr/p4-resource .
+docker build --rm -t olhtbr/p4-resource .
 bundle exec rake spec
