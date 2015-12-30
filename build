@@ -1,10 +1,16 @@
 #!/bin/bash
 
+set -e
+
 bundle install
 
 go build -x -o bin/in in/main.go
 go build -x -o bin/out out/main.go
 go build -x -o bin/check check/main.go
+
+go test github.com/olhtbr/p4-resource/in
+go test github.com/olhtbr/p4-resource/out
+go test github.com/olhtbr/p4-resource/check
 
 docker build --rm -t olhtbr/p4-resource .
 
