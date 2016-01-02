@@ -6,6 +6,7 @@ services:
 
 install:
   - chmod +x build
+  - export GOPATH=$GOROOT
 
 script:
   - ./build
