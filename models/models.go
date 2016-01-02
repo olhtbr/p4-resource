@@ -12,10 +12,10 @@ type CheckRequest struct {
 type CheckResponse []Version
 
 type Source struct {
-	Port   Port   `json:"port"`
-	User   string `json:"string"`
-	Ticket string `json:"string"`
-	Path   Path   `json:"path"`
+	Port     Port     `json:"port"`
+	User     string   `json:"string"`
+	Ticket   string   `json:"string"`
+	Filespec Filespec `json:"filespec"`
 }
 
 type Port struct {
@@ -24,7 +24,7 @@ type Port struct {
 	Port     uint16 `json:"number"`
 }
 
-type Path struct {
+type Filespec struct {
 	Depot  string `json:"string"`
 	Stream string `json:"string"`
 	Path   string `json:"string"`
