@@ -1,4 +1,4 @@
-sude: required
+sudo: required
 language: ruby
 
 services:
