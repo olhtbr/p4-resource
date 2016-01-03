@@ -1,11 +1,10 @@
 sudo: required
-language: ruby
+language: go
 
 services:
   - docker
 
 install:
-  - export GOPATH=`pwd`
   - go get github.com/onsi/ginkgo
   - go get github.com/onsi/gomega
   - chmod +x build
