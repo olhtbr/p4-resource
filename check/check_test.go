@@ -37,7 +37,8 @@ var _ = Describe("Check executed", func() {
 		err := json.Unmarshal(jsonBlob, &request)
 		Expect(err).To(Not(HaveOccurred()))
 
-		cmd = exec.Command("../bin/check")
+		// binary is the path to our check binary, which is built with gexec in check_test_suite.go
+		cmd = exec.Command(binary)
 	})
 
 	JustBeforeEach(func() {
