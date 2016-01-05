@@ -8,6 +8,15 @@ go build -x -o bin/in in/main.go
 go build -x -o bin/out out/main.go
 go build -x -o bin/check check/main.go
 
+# Start local Perforce server for testing
+docker run --name p4d -d -p 1666:1666 nikhilv/p4d
+
+# Always stop the server
+function cleanup {
+  docker rm -f p4d
+}
+trap cleanup EXIT
+
 go test in/*
 go test out/*
 go test check/*
