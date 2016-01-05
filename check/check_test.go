@@ -19,16 +19,16 @@ var _ = Describe("Check executed", func() {
 		jsonBlob := []byte(`{
 			"source": {
 				"port": {
-					"protocol": "ssl",
-						"host": "my.perforce.server",
-						"port": 1668
+					"protocol": "",
+					"host": "localhost",
+					"port": 1666
 				},
-				"user": "test.user",
-				"ticket": "123456ABCDEF",
+				"user": "Joe_Coder",
+				"ticket": "",
 				"filespec": {
-					"depot": "depot",
-					"stream": "stream",
-					"path": "..."
+					"depot": "HR",
+					"stream": "draft",
+					"path": ""
 				}
 			},
 			"version": {"changelist": "123456"}
@@ -37,8 +37,7 @@ var _ = Describe("Check executed", func() {
 		err := json.Unmarshal(jsonBlob, &request)
 		Expect(err).To(Not(HaveOccurred()))
 
-		// binary is the path to our check binary, which is built with gexec in check_test_suite.go
-		cmd = exec.Command(binary)
+		cmd = exec.Command("../bin/check")
 	})
 
 	JustBeforeEach(func() {
