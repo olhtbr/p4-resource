@@ -9,7 +9,7 @@ services:
   - docker
 
 install:
-  - go get -v github.com/onsi/ginkgo/gingko
+  - go get -v github.com/onsi/ginkgo/ginkgo
   - go get -v github.com/onsi/gomega
   - go get -v -t ./...
   - export PATH=$PATH:$GOPATH/bin
