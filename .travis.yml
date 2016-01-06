@@ -3,13 +3,16 @@ language: go
 
 go:
   - 1.5.1
+  - tip
 
 services:
   - docker
 
 install:
-  - go get github.com/onsi/ginkgo
-  - go get github.com/onsi/gomega
+  - go get -v github.com/onsi/ginkgo
+  - go get -v github.com/onsi/gomega
+  - go get -v -t ./...
+  - export PATH=$PATH:$GOPATH/bin
   - chmod +x build
 
 script:

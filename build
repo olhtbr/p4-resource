@@ -13,14 +13,12 @@ docker run --name p4d -d -p 1666:1666 nikhilv/p4d
 
 # Always stop the server
 function cleanup {
-  docker rm -f p4d
+  docker rm -v -f p4d
 }
 trap cleanup EXIT
 
-go test in/*
-go test out/*
-go test check/*
+ginkgo -r --randomizeAllSpecs --randomizeSuites --failOnPending --trace --compilers=2 --progress
 
-docker build --rm -t olhtbr/p4-resource .
+docker build -t olhtbr/p4-resource .
 
 bundle exec rake spec
