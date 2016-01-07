@@ -18,7 +18,7 @@ var _ = Describe("Check executed", func() {
 	BeforeEach(func() {
 		jsonBlob := []byte(`{
 			"source": {
-				"port": {
+				"server": {
 					"protocol": "",
 					"host": "localhost",
 					"port": 1666
