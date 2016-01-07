@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/olhtbr/p4-resource/driver"
 	"github.com/olhtbr/p4-resource/models"
 )
 
@@ -17,10 +18,15 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	driver := driver.PerforceDriver{
+		Server: request.Source.Server,
+		User:   request.Source.User,
+		Ticket: request.Source.Ticket,
+	}
+
 	if request.Version.Changelist == "" {
-		// TODO Get latest changelist from the driver
 		response = models.CheckResponse{
-			{Changelist: "123456"},
+			{Changelist: driver.GetLatestChangelist(request.Source.Filespec)},
 		}
 	}
 
