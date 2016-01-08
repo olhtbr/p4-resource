@@ -18,11 +18,8 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	driver := driver.PerforceDriver{
-		Server: request.Source.Server,
-		User:   request.Source.User,
-		Ticket: request.Source.Ticket,
-	}
+	driver := driver.PerforceDriver{}
+	err = driver.Login(request.Source.Server, request.Source.User, request.Source.Password)
 
 	if request.Version.Changelist == "" {
 		response = models.CheckResponse{

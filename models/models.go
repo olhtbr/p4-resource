@@ -16,7 +16,7 @@ type CheckResponse []Version
 type Source struct {
 	Server   Server   `json:"server"`
 	User     string   `json:"string"`
-	Ticket   string   `json:"string"`
+	Password string   `json:"string"`
 	Filespec Filespec `json:"filespec"`
 }
 
@@ -32,15 +32,18 @@ type Filespec struct {
 	Path   string `json:"string"`
 }
 
-func (s Server) String() (url string) {
+func (s Server) String() string {
+	url := ""
 	if s.Protocol != "" {
-		url = s.Protocol + ":"
+		url += s.Protocol + ":"
 	}
 	url += s.Host
 	if s.Port != 0 {
 		url += ":" + strconv.FormatUint(uint64(s.Port), 10)
+	} else {
+		url += ":1666"
 	}
-	return
+	return url
 }
 
 func (f Filespec) String() string {
