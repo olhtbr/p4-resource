@@ -22,7 +22,7 @@ var _ = Describe("Driver", func() {
 		}
 		user = "Joe_Coder"
 		password = ""
-		d = driver.PerforceDriver{}
+		d = new(driver.PerforceDriver)
 	})
 
 	Context("when login called", func() {

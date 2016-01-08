@@ -14,7 +14,7 @@ type PerforceDriver struct {
 	ticket string
 }
 
-func (d PerforceDriver) Login(s models.Server, u string, p string) error {
+func (d *PerforceDriver) Login(s models.Server, u string, p string) error {
 	d.server = s
 	d.user = u
 
