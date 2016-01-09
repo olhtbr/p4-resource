@@ -24,7 +24,7 @@ var _ = Describe("Check executed", func() {
 					"port": 1666
 				},
 				"user": "Joe_Coder",
-				"ticket": "",
+				"password": "",
 				"filespec": {
 					"depot": "HR",
 					"stream": "draft",

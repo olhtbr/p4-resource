@@ -1,6 +1,9 @@
 package models
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 type Version struct {
 	Changelist string `json:"string"`
@@ -15,21 +18,21 @@ type CheckResponse []Version
 
 type Source struct {
 	Server   Server   `json:"server"`
-	User     string   `json:"string"`
-	Password string   `json:"string"`
+	User     string   `json:"user"`
+	Password string   `json:"password"`
 	Filespec Filespec `json:"filespec"`
 }
 
 type Server struct {
-	Protocol string `json:"string"`
-	Host     string `json:"string"`
-	Port     uint16 `json:"number"`
+	Protocol string `json:"protocol"`
+	Host     string `json:"host"`
+	Port     uint16 `json:"port"`
 }
 
 type Filespec struct {
-	Depot  string `json:"string"`
-	Stream string `json:"string"`
-	Path   string `json:"string"`
+	Depot  string `json:"depot"`
+	Stream string `json:"stream"`
+	Path   string `json:"path"`
 }
 
 func (s Server) String() string {
@@ -43,7 +46,7 @@ func (s Server) String() string {
 	} else {
 		url += ":1666"
 	}
-	return url
+	return fmt.Sprintf("%s", url)
 }
 
 func (f Filespec) String() string {

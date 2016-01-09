@@ -1,6 +1,11 @@
 package driver
 
-import "github.com/olhtbr/p4-resource/models"
+import (
+	"fmt"
+	"os/exec"
+
+	"github.com/olhtbr/p4-resource/models"
+)
 
 type Driver interface {
 	Login(models.Server, string, string) error
@@ -14,9 +19,15 @@ type PerforceDriver struct {
 	ticket string
 }
 
-func (d *PerforceDriver) Login(s models.Server, u string, p string) error {
-	d.server = s
-	d.user = u
+func (d *PerforceDriver) Login(server models.Server, user string, password string) error {
+	d.server = server
+	d.user = user
+
+	cmd := exec.Command("p4", "-p", fmt.Sprintf("%s", server), "-u", user, "-P", password, "login", "-p")
+	_, err := cmd.CombinedOutput()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

@@ -16,9 +16,7 @@ var _ = Describe("Driver", func() {
 
 	BeforeEach(func() {
 		server = models.Server{
-			Protocol: "",
-			Host:     "localhost",
-			Port:     1666,
+			Host: "localhost",
 		}
 		user = "Joe_Coder"
 		password = ""
@@ -26,12 +24,12 @@ var _ = Describe("Driver", func() {
 	})
 
 	Context("when login called", func() {
-		Context("with valid username and password", func() {
-			It("should store a valid ticket", func() {
-				err := d.Login(server, user, password)
-				Expect(err).To(Not(HaveOccurred()))
-				Expect(d.GetTicket()).To(Not(BeNil()))
-				Expect(d.GetTicket()).To(Not(BeEmpty()))
+		Context("with valid username", func() {
+			Context("and user does not have password", func() {
+				It("should succeed", func() {
+					err := d.Login(server, user, password)
+					Expect(err).To(Not(HaveOccurred()))
+				})
 			})
 		})
 	})
