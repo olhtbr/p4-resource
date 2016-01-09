@@ -14,6 +14,8 @@ install:
   - go get -v -t ./...
   - export PATH=$PATH:$GOPATH/bin
   - chmod +x build
+  - wget -O /usr/bin/p4 http://ftp.perforce.com/pub/perforce/r15.2/bin.linux26x86_64/p4
+  - chmod +x /usr/bin/p4
 
 script:
   - ./build
