@@ -32,5 +32,16 @@ var _ = Describe("Driver", func() {
 				})
 			})
 		})
+
+		Context("with invalid username", func() {
+			BeforeEach(func() {
+				user = "non-existent-user"
+			})
+
+			It("should fail", func() {
+				err := d.Login(server, user, password)
+				Expect(err).To(HaveOccurred())
+			})
+		})
 	})
 })

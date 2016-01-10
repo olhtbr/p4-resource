@@ -25,7 +25,7 @@ func (d *PerforceDriver) Login(server models.Server, user string, password strin
 	d.user = user
 
 	cmd := exec.Command("p4", "-p", fmt.Sprintf("%s", server), "-u", user, "-P", password, "login", "-p")
-	_, err := cmd.CombinedOutput()
+	_, err := cmd.Output()
 	if err != nil {
 		return err
 	}
