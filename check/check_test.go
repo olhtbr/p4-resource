@@ -28,7 +28,7 @@ var _ = Describe("Check executed", func() {
 				"filespec": {
 					"depot": "HR",
 					"stream": "draft",
-					"path": ""
+					"path": "..."
 				}
 			},
 			"version": {"changelist": "123456"}
@@ -57,14 +57,13 @@ var _ = Describe("Check executed", func() {
 	})
 
 	Context("when version is omitted", func() {
-
 		BeforeEach(func() {
 			request.Version.Changelist = ""
 		})
 
 		It("should return the latest version", func() {
 			Expect(response).To(HaveLen(1))
-			Expect(response[0].Changelist).To(Equal("123456"))
+			Expect(response[0].Changelist).To(Equal("9964"))
 		})
 	})
 })

@@ -25,8 +25,13 @@ func main() {
 	}
 
 	if request.Version.Changelist == "" {
+		cl, err := driver.GetLatestChangelist(request.Source.Filespec)
+		if err != nil {
+			log.Fatalln(err)
+		}
+
 		response = models.CheckResponse{
-			{Changelist: driver.GetLatestChangelist(request.Source.Filespec)},
+			{Changelist: cl},
 		}
 	}
 
