@@ -110,19 +110,17 @@ var _ = Describe("Check executed", func() {
 		BeforeEach(func() {
 			counter := GetChangelistCounter()
 			expected = []string{
-				CounterToChangelist(counter - 2),
 				CounterToChangelist(counter - 1),
 				CounterToChangelist(counter),
 			}
 
-			request.Version.Changelist = CounterToChangelist(counter - 3)
+			request.Version.Changelist = CounterToChangelist(counter - 2)
 		})
 
 		It("should return a list of versions", func() {
-			Expect(response).To(HaveLen(3))
+			Expect(response).To(HaveLen(2))
 			Expect(response[0].Changelist).To(Equal(expected[0]))
 			Expect(response[1].Changelist).To(Equal(expected[1]))
-			Expect(response[2].Changelist).To(Equal(expected[2]))
 		})
 	})
 })
