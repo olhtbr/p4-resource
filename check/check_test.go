@@ -105,24 +105,24 @@ var _ = Describe("Check executed", func() {
 	})
 
 	Context("when version is not the latest", func() {
-		var cl1 string
-		var cl2 string
-		var cl3 string
+		var expected []string
 
 		BeforeEach(func() {
 			counter := GetChangelistCounter()
-			cl1 = CounterToChangelist(counter)
-			cl2 = CounterToChangelist(counter - 1)
-			cl3 = CounterToChangelist(counter - 2)
+			expected = []string{
+				CounterToChangelist(counter - 2),
+				CounterToChangelist(counter - 1),
+				CounterToChangelist(counter),
+			}
 
 			request.Version.Changelist = CounterToChangelist(counter - 3)
 		})
 
 		It("should return a list of versions", func() {
 			Expect(response).To(HaveLen(3))
-			Expect(response[0].Changelist).To(Equal(cl1))
-			Expect(response[1].Changelist).To(Equal(cl2))
-			Expect(response[2].Changelist).To(Equal(cl3))
+			Expect(response[0].Changelist).To(Equal(expected[0]))
+			Expect(response[1].Changelist).To(Equal(expected[1]))
+			Expect(response[2].Changelist).To(Equal(expected[2]))
 		})
 	})
 })
