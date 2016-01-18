@@ -35,6 +35,11 @@ var _ = Describe("Check executed", func() {
 		return counter
 	}
 
+	CounterToChangelist := func(counter uint64) string {
+		// Counter is latest changelist + 1
+		return strconv.FormatUint(uint64(counter-1), 10)
+	}
+
 	BeforeEach(func() {
 		jsonBlob := []byte(`{
 			"source": {
@@ -46,8 +51,8 @@ var _ = Describe("Check executed", func() {
 				"user": "Joe_Coder",
 				"password": "",
 				"filespec": {
-					"depot": "HR",
-					"stream": "draft",
+					"depot": "...",
+					"stream": "...",
 					"path": "..."
 				}
 			},
@@ -78,14 +83,8 @@ var _ = Describe("Check executed", func() {
 
 	Context("when version is omitted", func() {
 		BeforeEach(func() {
+			cl = CounterToChangelist(GetChangelistCounter())
 			request.Version.Changelist = ""
-			request.Source.Filespec.Depot = "..."
-			request.Source.Filespec.Stream = "..."
-			request.Source.Filespec.Path = "..."
-
-			// Counter is latest changelist + 1
-			counter := GetChangelistCounter()
-			cl = strconv.FormatUint(uint64(counter-1), 10)
 		})
 
 		It("should return the latest version", func() {
@@ -96,18 +95,34 @@ var _ = Describe("Check executed", func() {
 
 	Context("when version is latest", func() {
 		BeforeEach(func() {
-			// Counter is latest changelist + 1
-			counter := GetChangelistCounter()
-			cl = strconv.FormatUint(uint64(counter-1), 10)
-
+			cl = CounterToChangelist(GetChangelistCounter())
 			request.Version.Changelist = cl
-			request.Source.Filespec.Depot = "..."
-			request.Source.Filespec.Stream = "..."
-			request.Source.Filespec.Path = "..."
 		})
 
 		It("should return an empty list", func() {
 			Expect(response).To(HaveLen(0))
+		})
+	})
+
+	Context("when version is not the latest", func() {
+		var cl1 string
+		var cl2 string
+		var cl3 string
+
+		BeforeEach(func() {
+			counter := GetChangelistCounter()
+			cl1 = CounterToChangelist(counter)
+			cl2 = CounterToChangelist(counter - 1)
+			cl3 = CounterToChangelist(counter - 2)
+
+			request.Version.Changelist = CounterToChangelist(counter - 3)
+		})
+
+		It("should return a list of versions", func() {
+			Expect(response).To(HaveLen(3))
+			Expect(response[0].Changelist).To(Equal(cl1))
+			Expect(response[1].Changelist).To(Equal(cl2))
+			Expect(response[2].Changelist).To(Equal(cl3))
 		})
 	})
 })
