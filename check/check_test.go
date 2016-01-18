@@ -3,8 +3,6 @@ package main_test
 import (
 	"encoding/json"
 	"os/exec"
-	"regexp"
-	"strconv"
 
 	"github.com/olhtbr/p4-resource/models"
 	. "github.com/onsi/ginkgo"
@@ -16,29 +14,6 @@ var _ = Describe("Check executed", func() {
 	var cmd *exec.Cmd
 	var request models.CheckRequest
 	var response models.CheckResponse
-	var cl string
-
-	GetChangelistCounter := func() uint64 {
-		cmd := exec.Command("p4", "-z", "tag", "-u", "Joe_Coder", "-p", "localhost:1666", "counter", "change")
-		out, err := cmd.Output()
-		Expect(err).To(Not(HaveOccurred()))
-		Expect(out).To(Not(BeNil()))
-		Expect(out).To(Not(BeEmpty()))
-
-		re := regexp.MustCompile(`\.\.\.\s+value\s+(\d+)`)
-		match := re.FindStringSubmatch(string(out))
-		Expect(len(match)).To(Equal(2))
-
-		counter, err := strconv.ParseUint(match[1], 10, 16)
-		Expect(err).To(Not(HaveOccurred()))
-
-		return counter
-	}
-
-	CounterToChangelist := func(counter uint64) string {
-		// Counter is latest changelist + 1
-		return strconv.FormatUint(uint64(counter-1), 10)
-	}
 
 	BeforeEach(func() {
 		jsonBlob := []byte(`{
@@ -56,7 +31,7 @@ var _ = Describe("Check executed", func() {
 					"path": "..."
 				}
 			},
-			"version": {"changelist": "123456"}
+			"version": {"changelist": ""}
 		}`)
 
 		err := json.Unmarshal(jsonBlob, &request)
@@ -83,20 +58,18 @@ var _ = Describe("Check executed", func() {
 
 	Context("when version is omitted", func() {
 		BeforeEach(func() {
-			cl = CounterToChangelist(GetChangelistCounter())
 			request.Version.Changelist = ""
 		})
 
 		It("should return the latest version", func() {
 			Expect(response).To(HaveLen(1))
-			Expect(response[0].Changelist).To(Equal(cl))
+			Expect(response[0].Changelist).To(Equal("12104"))
 		})
 	})
 
 	Context("when version is latest", func() {
 		BeforeEach(func() {
-			cl = CounterToChangelist(GetChangelistCounter())
-			request.Version.Changelist = cl
+			request.Version.Changelist = "12104"
 		})
 
 		It("should return an empty list", func() {
@@ -107,20 +80,30 @@ var _ = Describe("Check executed", func() {
 	Context("when version is not the latest", func() {
 		var expected []string
 
-		BeforeEach(func() {
-			counter := GetChangelistCounter()
-			expected = []string{
-				CounterToChangelist(counter - 1),
-				CounterToChangelist(counter),
-			}
+		ValidateList := func() {
+			It("should return a list of versions", func() {
+				Expect(response).To(HaveLen(2))
+				Expect(response[0].Changelist).To(Equal(expected[0]))
+				Expect(response[1].Changelist).To(Equal(expected[1]))
+			})
+		}
 
-			request.Version.Changelist = CounterToChangelist(counter - 2)
+		Context("and is deleted", func() {
+			BeforeEach(func() {
+				expected = []string{"12103", "12104"}
+				request.Version.Changelist = "12100"
+			})
+
+			ValidateList()
 		})
 
-		It("should return a list of versions", func() {
-			Expect(response).To(HaveLen(2))
-			Expect(response[0].Changelist).To(Equal(expected[0]))
-			Expect(response[1].Changelist).To(Equal(expected[1]))
+		Context("and is not deleted", func() {
+			BeforeEach(func() {
+				expected = []string{"12103", "12104"}
+				request.Version.Changelist = "12099"
+			})
+
+			ValidateList()
 		})
 	})
 })
