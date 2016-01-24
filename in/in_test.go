@@ -53,8 +53,10 @@ var _ = Describe("In executed", func() {
 
 		Eventually(session).Should(gexec.Exit(code))
 
-		err = json.Unmarshal(session.Out.Contents(), &response)
-		Expect(err).To(Not(HaveOccurred()))
+		if code == 0 {
+			err = json.Unmarshal(session.Out.Contents(), &response)
+			Expect(err).To(Not(HaveOccurred()))
+		}
 	})
 
 	Context("when version is omitted", func() {
@@ -63,7 +65,7 @@ var _ = Describe("In executed", func() {
 		})
 
 		It("should exit with error", func() {
-			Expect(response).To(BeNil())
+			Expect(response.Version.Changelist).To(BeEmpty())
 		})
 	})
 })
