@@ -16,6 +16,15 @@ type CheckRequest struct {
 
 type CheckResponse []Version
 
+type InRequest struct {
+	Source  Source  `json:"source"`
+	Version Version `json:"version"`
+}
+
+type InResponse struct {
+	Version Version `json:"version"`
+}
+
 type Source struct {
 	Server   Server   `json:"server"`
 	User     string   `json:"user"`
