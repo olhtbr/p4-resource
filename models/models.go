@@ -6,7 +6,7 @@ import (
 )
 
 type Version struct {
-	Changelist string `json:"string"`
+	Changelist string `json:"changelist"`
 }
 
 type CheckRequest struct {
