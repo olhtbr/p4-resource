@@ -8,10 +8,9 @@ go:
 services:
   - docker
 
-before_install:
-  - pip install --user codecov
-
 install:
+  - go get github.com/modocache/gover
+  - go get github.com/mattn/goveralls
   - go get -v github.com/onsi/ginkgo/ginkgo
   - go get -v github.com/onsi/gomega
   - go get -v -t ./...
@@ -24,4 +23,5 @@ script:
   - ./build
 
 after_success:
-  - codecov -X gcov
+  - gover
+  - goveralls -coverprofile=gover.coverprofile -service=travis-ci
