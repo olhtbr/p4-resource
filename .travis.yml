@@ -24,4 +24,4 @@ script:
   - ./build
 
 after_success:
-  - codecov
+  - codecov -X gcov
