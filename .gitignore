@@ -1,3 +1,4 @@
 .rspec
 bin
 *.test
+*.coverprofile
