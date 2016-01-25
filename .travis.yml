@@ -23,5 +23,5 @@ install:
 script:
   - ./build
 
-after_sucess:
+after_success:
   - codecov
