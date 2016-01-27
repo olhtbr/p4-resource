@@ -18,19 +18,19 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	driver := &driver.PerforceDriver{}
+	driver := new(driver.Driver)
 	err = driver.Login(request.Source.Server, request.Source.User, request.Source.Password)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	if request.Version.Changelist == "" {
-		response = getResponseWithLatest(driver, request.Source.Filespec)
+		response = getResponseWithLatest(*driver, request.Source.Filespec)
 	} else {
 		cls, err := driver.GetChangelistsNewerThan(request.Version.Changelist, request.Source.Filespec)
 		if err != nil {
 			// Fallback to latest changelist
-			response = getResponseWithLatest(driver, request.Source.Filespec)
+			response = getResponseWithLatest(*driver, request.Source.Filespec)
 		} else {
 			response = models.CheckResponse{}
 			for _, cl := range cls {
