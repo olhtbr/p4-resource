@@ -27,4 +27,15 @@ var _ = Describe("In executed", func() {
 			Expect(response.Version.Changelist).To(BeEmpty())
 		})
 	})
+
+	Context("when version is deleted", func() {
+		BeforeEach(func() {
+			request.Version.Changelist = "12100"
+			code = 1
+		})
+
+		It("should exit with error", func() {
+			Expect(response.Version.Changelist).To(BeEmpty())
+		})
+	})
 })
