@@ -28,9 +28,9 @@ var _ = Describe("In executed", func() {
 		})
 	})
 
-	Context("when version is deleted", func() {
+	Context("when version does not exist", func() {
 		BeforeEach(func() {
-			request.Version.Changelist = "12100"
+			request.Version.Changelist = "12500"
 			code = 1
 		})
 
