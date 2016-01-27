@@ -9,22 +9,15 @@ import (
 	"github.com/olhtbr/p4-resource/models"
 )
 
-type Driver interface {
-	Login(models.Server, string, string) error
-	GetLatestChangelist(models.Filespec) (string, error)
-	GetChangelistsNewerThan(string, models.Filespec) ([]string, error)
-	GetTicket() string
+type Driver struct {
+	Server models.Server
+	User   string
+	Ticket string
 }
 
-type PerforceDriver struct {
-	server models.Server
-	user   string
-	ticket string
-}
-
-func (d *PerforceDriver) Login(server models.Server, user string, password string) error {
-	d.server = server
-	d.user = user
+func (d *Driver) Login(server models.Server, user string, password string) error {
+	d.Server = server
+	d.User = user
 
 	cmd := exec.Command("p4", "-p", server.String(), "-u", user, "-P", password, "login", "-p")
 	_, err := cmd.Output()
@@ -35,8 +28,8 @@ func (d *PerforceDriver) Login(server models.Server, user string, password strin
 	return nil
 }
 
-func (d PerforceDriver) GetLatestChangelist(f models.Filespec) (string, error) {
-	cmd := exec.Command("p4", "-z", "tag", "-p", d.server.String(), "-u", d.user, "changes", "-m", "1", f.String())
+func (d Driver) GetLatestChangelist(f models.Filespec) (string, error) {
+	cmd := exec.Command("p4", "-z", "tag", "-p", d.Server.String(), "-u", d.User, "changes", "-m", "1", f.String())
 	out, err := cmd.Output()
 	if err != nil {
 		return "", err
@@ -55,13 +48,13 @@ func (d PerforceDriver) GetLatestChangelist(f models.Filespec) (string, error) {
 	return "", nil
 }
 
-func (d PerforceDriver) GetChangelistsNewerThan(cl string, f models.Filespec) ([]string, error) {
+func (d Driver) GetChangelistsNewerThan(cl string, f models.Filespec) ([]string, error) {
 	clNum, err := strconv.ParseUint(cl, 10, 64)
 	if err != nil {
 		return nil, err
 	}
 
-	cmd := exec.Command("p4", "-z", "tag", "-p", d.server.String(), "-u", d.user, "changes", f.String()+"@"+strconv.FormatUint(clNum+1, 10)+",#head")
+	cmd := exec.Command("p4", "-z", "tag", "-p", d.Server.String(), "-u", d.User, "changes", f.String()+"@"+strconv.FormatUint(clNum+1, 10)+",#head")
 	out, err := cmd.Output()
 	if err != nil {
 		return nil, err
@@ -83,6 +76,21 @@ func (d PerforceDriver) GetChangelistsNewerThan(cl string, f models.Filespec) ([
 	return cls, nil
 }
 
-func (d PerforceDriver) GetTicket() string {
-	return d.ticket
+func (d Driver) ChangelistExists(cl string) (bool, error) {
+	cmd := exec.Command("p4", "-z", "tag", "-p", d.Server.String(), "-u", d.User, "describe", cl)
+	out, err := cmd.Output()
+	if err != nil {
+		return false, err
+	}
+
+	matched, err := regexp.Match("no such changelist", out)
+	if err != nil {
+		return false, err
+	}
+
+	if len(out) == 0 || matched {
+		return false, nil
+	}
+
+	return true, nil
 }

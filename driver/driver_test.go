@@ -9,7 +9,7 @@ import (
 )
 
 var _ = Describe("Driver", func() {
-	var d driver.Driver
+	var d *driver.Driver
 	var server models.Server
 	var user string
 	var password string
@@ -20,7 +20,7 @@ var _ = Describe("Driver", func() {
 		}
 		user = "Joe_Coder"
 		password = ""
-		d = new(driver.PerforceDriver)
+		d = new(driver.Driver)
 	})
 
 	Context("when login called", func() {
@@ -29,6 +29,8 @@ var _ = Describe("Driver", func() {
 				It("should succeed", func() {
 					err := d.Login(server, user, password)
 					Expect(err).To(Not(HaveOccurred()))
+					Expect(d.Server).To(Equal(server))
+					Expect(d.User).To(Equal(user))
 				})
 			})
 		})
