@@ -1,7 +1,6 @@
 package driver
 
 import (
-	"os/exec"
 	"regexp"
 	"sort"
 	"strconv"
@@ -19,8 +18,7 @@ func (d *Driver) Login(server models.Server, user string, password string) error
 	d.Server = server
 	d.User = user
 
-	cmd := exec.Command("p4", "-p", server.String(), "-u", user, "-P", password, "login", "-p")
-	_, err := cmd.Output()
+	_, err := P4(*d, "login", "-p")
 	if err != nil {
 		return err
 	}
@@ -29,8 +27,8 @@ func (d *Driver) Login(server models.Server, user string, password string) error
 }
 
 func (d Driver) GetLatestChangelist(f models.Filespec) (string, error) {
-	cmd := exec.Command("p4", "-z", "tag", "-p", d.Server.String(), "-u", d.User, "changes", "-m", "1", f.String())
-	out, err := cmd.Output()
+	out, err := P4(d, "changes", "-m", "1", f.String())
+
 	if err != nil {
 		return "", err
 	}
@@ -54,8 +52,7 @@ func (d Driver) GetChangelistsNewerThan(cl string, f models.Filespec) ([]string,
 		return nil, err
 	}
 
-	cmd := exec.Command("p4", "-z", "tag", "-p", d.Server.String(), "-u", d.User, "changes", f.String()+"@"+strconv.FormatUint(clNum+1, 10)+",#head")
-	out, err := cmd.Output()
+	out, err := P4(d, "changes", f.String()+"@"+strconv.FormatUint(clNum+1, 10)+",#head")
 	if err != nil {
 		return nil, err
 	}
@@ -77,13 +74,12 @@ func (d Driver) GetChangelistsNewerThan(cl string, f models.Filespec) ([]string,
 }
 
 func (d Driver) ChangelistExists(cl string) (bool, error) {
-	cmd := exec.Command("p4", "-z", "tag", "-p", d.Server.String(), "-u", d.User, "describe", cl)
-	out, err := cmd.Output()
+	out, err := P4(d, "describe", cl)
 	if err != nil {
 		return false, err
 	}
 
-	matched, err := regexp.Match("no such changelist", out)
+	matched, err := regexp.MatchString("no such changelist", out)
 	if err != nil {
 		return false, err
 	}
