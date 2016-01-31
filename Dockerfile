@@ -1,7 +1,4 @@
-FROM phusion/baseimage:0.9.18
-
-# Use baseimage's init system
-CMD ["/sbin/my_init"]
+FROM quay.io/justcontainers/base:v0.12.0
 
 ADD bin/in /opt/resource/in
 ADD bin/out /opt/resource/out
