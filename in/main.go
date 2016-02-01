@@ -11,6 +11,7 @@ import (
 
 func main() {
 	var request models.InRequest
+	var response models.InResponse
 
 	err := json.NewDecoder(os.Stdin).Decode(&request)
 	if err != nil {
@@ -43,4 +44,8 @@ func main() {
 			log.Fatalln("Requested version (" + cl + ") is pending")
 		}
 	}
+
+	response.Version.Changelist = cl
+
+	json.NewEncoder(os.Stdout).Encode(response)
 }

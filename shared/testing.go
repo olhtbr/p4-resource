@@ -50,7 +50,7 @@ func Run(cmd *exec.Cmd, request interface{}, response interface{}, code *int) {
 		Eventually(session).Should(gexec.Exit(*code))
 
 		if *code == 0 {
-			err = json.Unmarshal(session.Out.Contents(), &response)
+			err = json.Unmarshal(session.Out.Contents(), response)
 			Expect(err).To(Not(HaveOccurred()))
 		}
 	})

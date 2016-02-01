@@ -15,6 +15,11 @@ var _ = Describe("In executed", func() {
 	var request models.InRequest
 	var response models.InResponse
 
+	// Clear response
+	JustBeforeEach(func() {
+		response = models.InResponse{}
+	})
+
 	shared.Setup(&cmd, &request, "../bin/in")
 	shared.Run(&cmd, &request, &response, &code)
 
@@ -47,6 +52,17 @@ var _ = Describe("In executed", func() {
 
 		It("should exit with error", func() {
 			Expect(response.Version.Changelist).To(BeEmpty())
+		})
+	})
+
+	Context("when version is submitted", func() {
+		BeforeEach(func() {
+			(&request).Version.Changelist = "12099"
+			code = 0
+		})
+
+		It("should return the fetched version", func() {
+			Expect(response.Version.Changelist).To(Equal("12099"))
 		})
 	})
 })

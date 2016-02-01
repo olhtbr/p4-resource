@@ -15,6 +15,11 @@ var _ = Describe("Check executed", func() {
 	var request models.CheckRequest
 	var response models.CheckResponse
 
+	// Clear response
+	JustBeforeEach(func() {
+		response = models.CheckResponse{}
+	})
+
 	shared.Setup(&cmd, &request, "../bin/check")
 	shared.Run(&cmd, &request, &response, &code)
 
