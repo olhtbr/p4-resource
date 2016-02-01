@@ -118,6 +118,12 @@ var _ = Describe("Driver", func() {
 				Expect(err).To(Not(HaveOccurred()))
 				Expect(exists).To(BeTrue())
 			})
+
+			It("should return submitted status", func() {
+				status, err := d.ChangelistStatus("12099")
+				Expect(err).To(Not(HaveOccurred()))
+				Expect(status).To(Equal("submitted"))
+			})
 		})
 
 		Context("and is pending", func() {
@@ -125,6 +131,12 @@ var _ = Describe("Driver", func() {
 				exists, err := d.ChangelistExists("12100")
 				Expect(err).To(Not(HaveOccurred()))
 				Expect(exists).To(BeTrue())
+			})
+
+			It("should return pending status", func() {
+				status, err := d.ChangelistStatus("12100")
+				Expect(err).To(Not(HaveOccurred()))
+				Expect(status).To(Equal("pending"))
 			})
 		})
 	})

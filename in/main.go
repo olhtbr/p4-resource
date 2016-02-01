@@ -11,13 +11,13 @@ import (
 
 func main() {
 	var request models.InRequest
-	cl := request.Version.Changelist
 
 	err := json.NewDecoder(os.Stdin).Decode(&request)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
+	cl := request.Version.Changelist
 	driver := new(driver.Driver)
 	err = driver.Login(request.Source.Server, request.Source.User, request.Source.Password)
 	if err != nil {
@@ -32,8 +32,15 @@ func main() {
 			log.Fatalln(err)
 		}
 
+		status, err := driver.ChangelistStatus(cl)
+		if err != nil {
+			log.Fatalln(err)
+		}
+
 		if !exists {
-			log.Fatalln("Requested version (" + cl + ")does not exist")
+			log.Fatalln("Requested version (" + cl + ") does not exist")
+		} else if status == "pending" {
+			log.Fatalln("Requested version (" + cl + ") is pending")
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package driver
 
 import (
+	"errors"
 	"regexp"
 	"sort"
 	"strconv"
@@ -79,14 +80,22 @@ func (d Driver) ChangelistExists(cl string) (bool, error) {
 		return false, err
 	}
 
-	matched, err := regexp.MatchString("no such changelist", out)
+	match, err := regexp.MatchString(`\.\.\.\s+change\s+`+cl, out)
+
+	return match, err
+}
+
+func (d Driver) ChangelistStatus(cl string) (string, error) {
+	out, err := P4(d, "describe", cl)
 	if err != nil {
-		return false, err
+		return "", nil
 	}
 
-	if len(out) == 0 || matched {
-		return false, nil
+	re := regexp.MustCompile(`\.\.\.\s+status\s+(.+)`)
+	matches := re.FindStringSubmatch(string(out))
+	if len(matches) != 2 {
+		return "", errors.New("Could not parse status of changelist " + cl)
 	}
 
-	return true, nil
+	return matches[1], nil
 }

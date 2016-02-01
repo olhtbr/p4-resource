@@ -30,7 +30,18 @@ var _ = Describe("In executed", func() {
 
 	Context("when version does not exist", func() {
 		BeforeEach(func() {
-			request.Version.Changelist = "12500"
+			(&request).Version.Changelist = "12500"
+			code = 1
+		})
+
+		It("should exit with error", func() {
+			Expect(response.Version.Changelist).To(BeEmpty())
+		})
+	})
+
+	Context("when version is pending", func() {
+		BeforeEach(func() {
+			(&request).Version.Changelist = "12100"
 			code = 1
 		})
 
