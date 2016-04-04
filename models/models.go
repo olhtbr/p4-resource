@@ -1,13 +1,12 @@
 package models
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
 )
 
 type Request interface {
-	Setup([]byte) error
+	Setup()
 }
 
 type Response interface {
@@ -71,14 +70,40 @@ func (f Filespec) String() string {
 	return "//" + f.Depot + "/" + f.Stream + "/" + f.Path
 }
 
-func (r *CheckRequest) Setup(jsonBlob []byte) error {
-	err := json.Unmarshal(jsonBlob, &r)
-	return err
+func (r *CheckRequest) Setup() {
+	*r = CheckRequest{
+		Source: Source{
+			Server: Server{
+				Host: "localhost",
+				Port: 1666,
+			},
+			User: "Joe_Coder",
+			Filespec: Filespec{
+				Depot:  "...",
+				Stream: "...",
+				Path:   "...",
+			},
+		},
+		Version: Version{},
+	}
 }
 
-func (r *InRequest) Setup(jsonBlob []byte) error {
-	err := json.Unmarshal(jsonBlob, &r)
-	return err
+func (r *InRequest) Setup() {
+	*r = InRequest{
+		Source: Source{
+			Server: Server{
+				Host: "localhost",
+				Port: 1666,
+			},
+			User: "Joe_Coder",
+			Filespec: Filespec{
+				Depot:  "...",
+				Stream: "...",
+				Path:   "...",
+			},
+		},
+		Version: Version{},
+	}
 }
 
 func (r *CheckResponse) Clear() {

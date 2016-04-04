@@ -15,7 +15,6 @@ var _ = Describe("In executed", func() {
 	var code int
 	var request models.InRequest
 	var response models.InResponse
-	var folder string // Temp folder as input to ../bin/in
 
 	// Clear response
 	JustBeforeEach(func() {
@@ -23,28 +22,12 @@ var _ = Describe("In executed", func() {
 	})
 
 	BeforeEach(func() {
-		err := request.Setup(
-			[]byte(`{
-				"source": {
-					"server": {
-						"protocol": "",
-						"host": "localhost",
-						"port": 1666
-					},
-					"user": "Joe_Coder",
-					"password": "",
-					"filespec": {
-						"depot": "...",
-						"stream": "...",
-						"path": "..."
-					}
-				},
-				"version": {"changelist": ""}
-			}`))
+		request.Setup()
+
+		// Temp folder as input to ../bin/in
+		folder, err := ioutil.TempDir("", "")
 		Expect(err).To(Not(HaveOccurred()))
 
-		folder, err = ioutil.TempDir("", "")
-		Expect(err).To(Not(HaveOccurred()))
 		cmd = *exec.Command("../bin/in", folder)
 	})
 

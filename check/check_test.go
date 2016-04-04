@@ -21,25 +21,7 @@ var _ = Describe("Check executed", func() {
 	})
 
 	BeforeEach(func() {
-		err := request.Setup(
-			[]byte(`{
-				"source": {
-					"server": {
-						"protocol": "",
-						"host": "localhost",
-						"port": 1666
-					},
-					"user": "Joe_Coder",
-					"password": "",
-					"filespec": {
-						"depot": "...",
-						"stream": "...",
-						"path": "..."
-					}
-				},
-				"version": {"changelist": ""}
-			}`))
-		Expect(err).To(Not(HaveOccurred()))
+		request.Setup()
 		cmd = *exec.Command("../bin/check")
 	})
 
