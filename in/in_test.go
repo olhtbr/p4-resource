@@ -19,7 +19,7 @@ var _ = Describe("In executed", func() {
 
 	// Clear response
 	JustBeforeEach(func() {
-		response = models.InResponse{}
+		response.Clear()
 	})
 
 	BeforeEach(func() {

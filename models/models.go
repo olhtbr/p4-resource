@@ -10,6 +10,10 @@ type Request interface {
 	Setup([]byte) error
 }
 
+type Response interface {
+	Clear()
+}
+
 type Version struct {
 	Changelist string `json:"changelist"`
 }
@@ -75,4 +79,12 @@ func (r *CheckRequest) Setup(jsonBlob []byte) error {
 func (r *InRequest) Setup(jsonBlob []byte) error {
 	err := json.Unmarshal(jsonBlob, &r)
 	return err
+}
+
+func (r *CheckResponse) Clear() {
+	*r = CheckResponse{}
+}
+
+func (r *InResponse) Clear() {
+	*r = InResponse{}
 }

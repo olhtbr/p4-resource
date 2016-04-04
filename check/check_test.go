@@ -17,7 +17,7 @@ var _ = Describe("Check executed", func() {
 
 	// Clear response
 	JustBeforeEach(func() {
-		response = models.CheckResponse{}
+		response.Clear()
 	})
 
 	BeforeEach(func() {
