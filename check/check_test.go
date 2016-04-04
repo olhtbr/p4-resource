@@ -20,7 +20,29 @@ var _ = Describe("Check executed", func() {
 		response = models.CheckResponse{}
 	})
 
-	shared.Setup(&cmd, &request, "../bin/check")
+	BeforeEach(func() {
+		err := request.Setup(
+			[]byte(`{
+				"source": {
+					"server": {
+						"protocol": "",
+						"host": "localhost",
+						"port": 1666
+					},
+					"user": "Joe_Coder",
+					"password": "",
+					"filespec": {
+						"depot": "...",
+						"stream": "...",
+						"path": "..."
+					}
+				},
+				"version": {"changelist": ""}
+			}`))
+		Expect(err).To(Not(HaveOccurred()))
+		cmd = *exec.Command("../bin/check")
+	})
+
 	shared.Run(&cmd, &request, &response, &code)
 
 	Context("when version is omitted", func() {

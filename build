@@ -17,7 +17,7 @@ function cleanup {
 }
 trap cleanup EXIT
 
-ginkgo -r --randomizeAllSpecs --randomizeSuites --failOnPending --trace --compilers=2 --progress --cover --v
+ginkgo -r --randomizeAllSpecs --randomizeSuites --trace --compilers=2 --progress --cover --v --failOnPending
 
 docker build -t olhtbr/p4-resource .
 

@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"io/ioutil"
 	"os/exec"
 
 	"github.com/olhtbr/p4-resource/models"
@@ -14,13 +15,39 @@ var _ = Describe("In executed", func() {
 	var code int
 	var request models.InRequest
 	var response models.InResponse
+	var folder string // Temp folder as input to ../bin/in
 
 	// Clear response
 	JustBeforeEach(func() {
 		response = models.InResponse{}
 	})
 
-	shared.Setup(&cmd, &request, "../bin/in")
+	BeforeEach(func() {
+		err := request.Setup(
+			[]byte(`{
+				"source": {
+					"server": {
+						"protocol": "",
+						"host": "localhost",
+						"port": 1666
+					},
+					"user": "Joe_Coder",
+					"password": "",
+					"filespec": {
+						"depot": "...",
+						"stream": "...",
+						"path": "..."
+					}
+				},
+				"version": {"changelist": ""}
+			}`))
+		Expect(err).To(Not(HaveOccurred()))
+
+		folder, err = ioutil.TempDir("", "")
+		Expect(err).To(Not(HaveOccurred()))
+		cmd = *exec.Command("../bin/in", folder)
+	})
+
 	shared.Run(&cmd, &request, &response, &code)
 
 	Context("when version is omitted", func() {
@@ -63,6 +90,10 @@ var _ = Describe("In executed", func() {
 
 		It("should return the fetched version", func() {
 			Expect(response.Version.Changelist).To(Equal("12099"))
+		})
+
+		It("should sync it in the target folder", func() {
+
 		})
 	})
 })

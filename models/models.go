@@ -1,9 +1,14 @@
 package models
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 )
+
+type Request interface {
+	Setup([]byte) error
+}
 
 type Version struct {
 	Changelist string `json:"changelist"`
@@ -60,4 +65,14 @@ func (s Server) String() string {
 
 func (f Filespec) String() string {
 	return "//" + f.Depot + "/" + f.Stream + "/" + f.Path
+}
+
+func (r *CheckRequest) Setup(jsonBlob []byte) error {
+	err := json.Unmarshal(jsonBlob, &r)
+	return err
+}
+
+func (r *InRequest) Setup(jsonBlob []byte) error {
+	err := json.Unmarshal(jsonBlob, &r)
+	return err
 }

@@ -9,33 +9,6 @@ import (
 	"github.com/onsi/gomega/gexec"
 )
 
-func Setup(cmd *exec.Cmd, request interface{}, script string) {
-	BeforeEach(func() {
-		jsonBlob := []byte(`{
-            "source": {
-                "server": {
-                    "protocol": "",
-                    "host": "localhost",
-                    "port": 1666
-                },
-                "user": "Joe_Coder",
-                "password": "",
-                "filespec": {
-                    "depot": "...",
-                    "stream": "...",
-                    "path": "..."
-                }
-            },
-            "version": {"changelist": ""}
-        }`)
-
-		err := json.Unmarshal(jsonBlob, &request)
-		Expect(err).To(Not(HaveOccurred()))
-
-		*cmd = *exec.Command(script)
-	})
-}
-
 func Run(cmd *exec.Cmd, request interface{}, response interface{}, code *int) {
 	JustBeforeEach(func() {
 		stdin, err := cmd.StdinPipe()
